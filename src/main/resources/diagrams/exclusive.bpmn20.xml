@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="myProcess" name="My process" isExecutable="true">
+    <startEvent id="startevent1" name="startevent1" activiti:initiator="start">
+      <extensionElements>
+        <activiti:executionListener event="start" class="com.cccis.activiti.listener.StartListener"></activiti:executionListener>
+      </extensionElements>
+    </startEvent>
+    <userTask id="usertask1" name="usertask1">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.cccis.activiti.listener.TaskListener1"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.cccis.activiti.listener.TaskListener2"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow1" name="flow1" sourceRef="startevent1" targetRef="exclusivegateway1"></sequenceFlow>
+    <userTask id="usertask2" name="usertask2">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.cccis.activiti.listener.TaskListener1"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.cccis.activiti.listener.TaskListener2"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <endEvent id="endevent1" name="endevent1">
+      <extensionElements>
+        <activiti:executionListener event="end" class="com.cccis.activiti.listener.EndListener"></activiti:executionListener>
+      </extensionElements>
+    </endEvent>
+    <sequenceFlow id="step2FlowToEndFlow" name="step2FlowToEndFlow" sourceRef="usertask2" targetRef="endevent1">
+      <extensionElements>
+        <activiti:executionListener event="take" class="com.cccis.activiti.listener.FlowListener2"></activiti:executionListener>
+      </extensionElements>
+    </sequenceFlow>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway" default="step1Flow"></exclusiveGateway>
+    <userTask id="usertask3" name="usertask3">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.cccis.activiti.listener.TaskListener1"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.cccis.activiti.listener.TaskListener2"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="step1Flow" name="step1Flow" sourceRef="exclusivegateway1" targetRef="usertask1"></sequenceFlow>
+    <sequenceFlow id="step3Flow" name="step3Flow" sourceRef="exclusivegateway1" targetRef="usertask3">
+      <conditionExpression xsi:type="tFormalExpression">${step == 3}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="step2Flow" name="step2Flow" sourceRef="exclusivegateway1" targetRef="usertask2">
+      <conditionExpression xsi:type="tFormalExpression">${step == 2}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="step1FlowToEndFlow" name="step1FlowToEndFlow" sourceRef="usertask1" targetRef="endevent1">
+      <extensionElements>
+        <activiti:executionListener event="take" class="com.cccis.activiti.listener.FlowListener1"></activiti:executionListener>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="step3FlowToEndFlow" name="step3FlowToEndFlow" sourceRef="usertask3" targetRef="endevent1">
+      <extensionElements>
+        <activiti:executionListener event="take" class="com.cccis.activiti.listener.FlowListener3"></activiti:executionListener>
+      </extensionElements>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_myProcess">
+    <bpmndi:BPMNPlane bpmnElement="myProcess" id="BPMNPlane_myProcess">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="30.0" y="153.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask1" id="BPMNShape_usertask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="230.0" y="50.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask2" id="BPMNShape_usertask2">
+        <omgdc:Bounds height="55.0" width="105.0" x="230.0" y="143.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="560.0" y="153.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="133.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask3" id="BPMNShape_usertask3">
+        <omgdc:Bounds height="55.0" width="105.0" x="230.0" y="240.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="65.0" y="170.0"></omgdi:waypoint>
+        <omgdi:waypoint x="133.0" y="170.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="65.0" y="170.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="step2FlowToEndFlow" id="BPMNEdge_step2FlowToEndFlow">
+        <omgdi:waypoint x="335.0" y="170.0"></omgdi:waypoint>
+        <omgdi:waypoint x="560.0" y="170.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="42.0" width="100.0" x="345.0" y="170.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="step1Flow" id="BPMNEdge_step1Flow">
+        <omgdi:waypoint x="153.0" y="150.0"></omgdi:waypoint>
+        <omgdi:waypoint x="153.0" y="107.0"></omgdi:waypoint>
+        <omgdi:waypoint x="230.0" y="77.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="153.0" y="150.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="step3Flow" id="BPMNEdge_step3Flow">
+        <omgdi:waypoint x="153.0" y="190.0"></omgdi:waypoint>
+        <omgdi:waypoint x="153.0" y="237.0"></omgdi:waypoint>
+        <omgdi:waypoint x="230.0" y="267.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="153.0" y="190.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="step2Flow" id="BPMNEdge_step2Flow">
+        <omgdi:waypoint x="173.0" y="170.0"></omgdi:waypoint>
+        <omgdi:waypoint x="230.0" y="170.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="173.0" y="170.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="step1FlowToEndFlow" id="BPMNEdge_step1FlowToEndFlow">
+        <omgdi:waypoint x="282.0" y="105.0"></omgdi:waypoint>
+        <omgdi:waypoint x="577.0" y="153.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="42.0" width="100.0" x="282.0" y="105.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="step3FlowToEndFlow" id="BPMNEdge_step3FlowToEndFlow">
+        <omgdi:waypoint x="282.0" y="240.0"></omgdi:waypoint>
+        <omgdi:waypoint x="577.0" y="188.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="42.0" width="100.0" x="282.0" y="240.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
